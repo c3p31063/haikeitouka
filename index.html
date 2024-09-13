@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Background Remover</title>
+    <style>
+        #output-container {
+            margin-top: 20px;
+        }
+        #output {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <h1>Upload an Image to Remove Background</h1>
@@ -11,22 +20,43 @@
         <input type="file" id="imageUpload" accept="image/*" />
         <button type="submit">Upload Image</button>
     </form>
-    <img id="output" style="margin-top: 20px;" width="300" />
+    <div id="output-container">
+        <h2>Image with Transparent Background</h2>
+        <img id="output" />
+    </div>
 
     <script>
         document.getElementById('imageForm').addEventListener('submit', async function (e) {
             e.preventDefault();
             let fileInput = document.getElementById('imageUpload').files[0];
+            if (!fileInput) {
+                alert('Please upload an image.');
+                return;
+            }
+
             let formData = new FormData();
             formData.append('file', fileInput);
 
-            let response = await fetch('https://www.erase.bg/api/v1/remove-bg', {
-                method: 'POST',
-                body: formData,
-            });
+            try {
+                let response = await fetch('https://www.erase.bg/api/v1/remove-bg', {
+                    method: 'POST',
+                    body: formData,
+                });
 
-            let result = await response.json();
-            document.getElementById('output').src = result.data.image_url;
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                let result = await response.json();
+                if (result.data && result.data.image_url) {
+                    document.getElementById('output').src = result.data.image_url;
+                } else {
+                    alert('Failed to remove background. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while processing the image.');
+            }
         });
     </script>
 </body>
