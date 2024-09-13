@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Background Remover</title>
+    <title>プロジェクト演習B背景透過サイト</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,22 +36,22 @@
     </style>
 </head>
 <body>
-    <h1>背景透過したい画像をアップロードしてちょ💛</h1>
+    <h1>背景透過したい画像をアップロードしてください</h1>
     <form id="imageForm">
         <input type="file" id="imageUpload" accept="image/*" />
-        <button type="submit">選択できたらここ押してちょ💙</button>
+        <button type="submit">画像をアップロードして背景を透過する</button>
     </form>
     
     <div id="output-container">
-        <h2>アップロードした画像だお？💚</h2>
+        <h2>アップロード画像</h2>
         <img id="input-image" />
         
-        <h2>透過してあげたにょ！！💜</h2>
+        <h2>背景透過画像</h2>
         <img id="output-image" />
-        <button id="download-button" style="display: none;">Download Image</button>
+        <button id="download-button" style="display: none;">背景透過した画像をダウンロード</button>
     </div>
     
-    <p id="みすった～💔"></p>
+    <p id="error-message"></p>
 
     <script>
         document.getElementById('imageForm').addEventListener('submit', async function (e) {
@@ -87,6 +87,8 @@
                 let outputImageUrl = URL.createObjectURL(result);
                 document.getElementById('output-image').src = outputImageUrl;
                 document.getElementById('download-button').style.display = 'block';
+                
+                // Android対応のダウンロード機能
                 document.getElementById('download-button').onclick = function () {
                     let a = document.createElement('a');
                     a.href = outputImageUrl;
