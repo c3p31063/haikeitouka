@@ -21,6 +21,18 @@
         #error-message {
             color: red;
         }
+        #download-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #download-button:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
@@ -36,6 +48,7 @@
         
         <h2>Image with Transparent Background</h2>
         <img id="output-image" />
+        <button id="download-button" style="display: none;">Download Image</button>
     </div>
     
     <p id="error-message"></p>
@@ -73,6 +86,15 @@
                 let result = await response.blob();
                 let outputImageUrl = URL.createObjectURL(result);
                 document.getElementById('output-image').src = outputImageUrl;
+                document.getElementById('download-button').style.display = 'block';
+                document.getElementById('download-button').onclick = function () {
+                    let a = document.createElement('a');
+                    a.href = outputImageUrl;
+                    a.download = 'transparent-background.png';  // 保存するファイル名
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                };
                 document.getElementById('error-message').innerText = '';
             } catch (error) {
                 console.error('Error:', error);
@@ -82,3 +104,4 @@
     </script>
 </body>
 </html>
+
