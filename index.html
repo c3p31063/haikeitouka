@@ -5,12 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Background Remover</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
         #output-container {
             margin-top: 20px;
         }
-        #output {
+        #input-image, #output-image {
             max-width: 100%;
             height: auto;
+            display: block;
+            margin-top: 10px;
+        }
+        #error-message {
+            color: red;
         }
     </style>
 </head>
@@ -20,42 +29,54 @@
         <input type="file" id="imageUpload" accept="image/*" />
         <button type="submit">Upload Image</button>
     </form>
+    
     <div id="output-container">
+        <h2>Original Image</h2>
+        <img id="input-image" />
+        
         <h2>Image with Transparent Background</h2>
-        <img id="output" />
+        <img id="output-image" />
     </div>
+    
+    <p id="error-message"></p>
 
     <script>
         document.getElementById('imageForm').addEventListener('submit', async function (e) {
             e.preventDefault();
+
             let fileInput = document.getElementById('imageUpload').files[0];
             if (!fileInput) {
-                alert('Please upload an image.');
+                document.getElementById('error-message').innerText = 'Please upload an image.';
                 return;
             }
 
+            // Show the uploaded image
+            let inputImageUrl = URL.createObjectURL(fileInput);
+            document.getElementById('input-image').src = inputImageUrl;
+
             let formData = new FormData();
-            formData.append('file', fileInput);
+            formData.append('image_file', fileInput);
 
             try {
-                let response = await fetch('https://www.erase.bg/api/v1/remove-bg', {
+                let response = await fetch('https://api.remove.bg/v1.0/removebg', {
                     method: 'POST',
+                    headers: {
+                        'X-Api-Key': 'xZBhE7vRh31xq7JdaQUvcZX7'  // ここに APIキーを貼り付けます
+                    },
                     body: formData,
                 });
 
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error(`HTTP error! Status: ${response.status}`);
                 }
 
-                let result = await response.json();
-                if (result.data && result.data.image_url) {
-                    document.getElementById('output').src = result.data.image_url;
-                } else {
-                    alert('Failed to remove background. Please try again.');
-                }
+                let result = await response.blob();
+                let outputImageUrl = URL.createObjectURL(result);
+                document.getElementById('output-image').src = outputImageUrl;
+                document.getElementById('error-message').innerText = '';
             } catch (error) {
                 console.error('Error:', error);
-                alert('An error occurred while processing the image.');
+                document.getElementById('error-message').innerText = 'An error occurred while processing the image. Please try again.';
             }
         });
     </script>
