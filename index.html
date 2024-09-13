@@ -47,7 +47,9 @@
         <img id="input-image" />
         
         <h2>背景透過画像</h2>
-        <img id="output-image" />
+        <a id="download-link" style="display: none;" download="transparent-background.png">
+            <img id="output-image" />
+        </a>
         <button id="download-button" style="display: none;">背景透過した画像をダウンロード</button>
     </div>
     
@@ -86,17 +88,12 @@
                 let result = await response.blob();
                 let outputImageUrl = URL.createObjectURL(result);
                 document.getElementById('output-image').src = outputImageUrl;
-                document.getElementById('download-button').style.display = 'block';
+
+                let downloadLink = document.getElementById('download-link');
+                downloadLink.href = outputImageUrl;
+                downloadLink.style.display = 'block';
                 
-                // Android対応のダウンロード機能
-                document.getElementById('download-button').onclick = function () {
-                    let a = document.createElement('a');
-                    a.href = outputImageUrl;
-                    a.download = 'transparent-background.png';  // 保存するファイル名
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                };
+                document.getElementById('download-button').style.display = 'block';
                 document.getElementById('error-message').innerText = '';
             } catch (error) {
                 console.error('Error:', error);
@@ -106,4 +103,5 @@
     </script>
 </body>
 </html>
+
 
