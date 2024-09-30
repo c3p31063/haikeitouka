@@ -74,13 +74,13 @@
                 let response = await fetch('https://api.remove.bg/v1.0/removebg', {
                     method: 'POST',
                     headers: {
-                        'X-Api-Key': 'xZBhE7vRh31xq7JdaQUvcZX7'  // ここに APIキーを貼り付けます
+                        'X-Api-Key': 'xZBhE7vRh31xq7JdaQUvcZX7'
                     },
                     body: formData,
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
+                    throw new Error(`era-demasita: ${response.status}`);
                 }
 
                 let result = await response.blob();
@@ -88,11 +88,10 @@
                 document.getElementById('output-image').src = outputImageUrl;
                 document.getElementById('download-button').style.display = 'block';
                 
-                // ダウンロード機能
                 document.getElementById('download-button').onclick = function () {
                     let a = document.createElement('a');
                     a.href = outputImageUrl;
-                    a.download = 'transparent-background.png';  // 保存するファイル名
+                    a.download = 'haikeitoukago.png';
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
